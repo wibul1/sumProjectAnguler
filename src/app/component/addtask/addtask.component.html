@@ -1,0 +1,8 @@
+<h2>Add New Task</h2>
+<form class="form-section" (submit)="createBook()">
+  <input  [(ngModel)]="newtask.title" placeholder="Title" name="title" required />
+  <input  [(ngModel)]="newtask.category" placeholder="Category" name="category" required />
+  <input  [(ngModel)]="newtask.description" placeholder="Description" name="description" required />
+  <input [(ngModel)]="newtask.datetime" placeholder="Date" type="date" name="datetime" required />
+  <button type="submit">Add Book</button>
+</form>

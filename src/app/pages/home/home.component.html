@@ -1,0 +1,10 @@
+<div class="app-container">
+    <app-sidebar #sidebar class="sidebar"></app-sidebar>
+    <div class="main-content" [ngClass]="{'content-shifted': sidebar.isMenuOpen}">
+      <app-navbar class="navbar"></app-navbar>
+      <div class="content-area">
+        <!-- Your main page content goes here -->
+
+      </div>
+    </div>
+  </div>

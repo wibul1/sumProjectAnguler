@@ -1,0 +1,17 @@
+<div class="task-item">
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.datetime }}</p>
+    <button class="detail-btn" (click)="viewDetails(task.id)">รายละเอียด</button>
+    <button class="finish-btn" (click)="finishTask()">Finish</button>
+  </div>
+  
+  <!-- Modal สำหรับแสดงรายละเอียดของ Task -->
+  <div *ngIf="isDetailsModalOpen" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeDetailsModal()">&times;</span>
+      <h2>{{ selectedTask?.title }}</h2>
+      <p><strong>Category:</strong> {{ selectedTask?.category }}</p>
+      <p><strong>Description:</strong> {{ selectedTask?.description }}</p>
+      <p><strong>Date:</strong> {{ selectedTask?.datetime }}</p>
+    </div>
+  </div>

@@ -1,0 +1,29 @@
+<!-- sidebar.component.html -->
+<div class="sidebar" [ngClass]="{'open': isMenuOpen}">
+    <div class="menu-icon" (click)="toggleMenu()">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    
+    <div class="menu-content">
+      <ul>
+        <li routerLink="/home" routerLinkActive="active">
+          <i class="icon">🏠</i>
+          <span [ngClass]="{'visible': isMenuOpen}">Home</span>
+        </li>
+        <li>
+          <i class="icon">ℹ️</i>
+          <span [ngClass]="{'visible': isMenuOpen}">About</span>
+        </li>
+        <li routerLink="/task" routerLinkActive="active">
+          <i class="icon">💼</i>
+          <span [ngClass]="{'visible': isMenuOpen}">Task</span>
+        </li>
+        <li>
+          <i class="icon">✉️</i>
+          <span [ngClass]="{'visible': isMenuOpen}">Contact</span>
+        </li>
+      </ul>
+    </div>
+  </div>

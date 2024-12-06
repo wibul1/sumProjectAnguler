@@ -1,0 +1,33 @@
+.task-container {
+    display: flex;
+    justify-content: space-around; /* จัดวางหมวดหมู่ให้มีระยะห่างที่เท่ากัน */
+    align-items: flex-start; /* จัดแนวให้อยู่ด้านบน */
+    gap: 20px; /* ระยะห่างระหว่างแต่ละหมวดหมู่ */
+  }
+  
+  .task-category {
+    width: 30%; /* กำหนดความกว้างของแต่ละหมวดหมู่ */
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-category h2 {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  /* กำหนดสีของแต่ละหมวดหมู่ */
+  .urgent h2 {
+    color: red;
+  }
+  
+  .not-urgent h2 {
+    color: orange;
+  }
+  
+  .later h2 {
+    color: green;
+  }
+  

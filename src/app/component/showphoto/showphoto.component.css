@@ -1,0 +1,25 @@
+/* รูปแบบของรายการหนังสือ */
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+  }
+  
+  .book-item {
+    display: flex;
+    width: calc(20% - 20px); /* แสดงผล 5 รายการต่อแถวในหน้าจอใหญ่ */
+    background-color: #f8f8f8;
+    padding: 14px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .book-image {
+    width: 120px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 4px;
+  }
