@@ -1,20 +1,43 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth/auth.service';
-
+import { UserService } from 'src/app/service/user/user.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
-  username: string = 'John Doe';
+export class NavbarComponent implements OnInit {
+  // username: string = 'Guest';
   isDropdownOpen: boolean = false;
+  userProfile: any;
 
   constructor(
-    private router: Router, 
-    private authService: AuthService
-  ) {}
+    private router: Router,
+    private authService: AuthService, 
+    private userService: UserService) {}
+
+  ngOnInit(): void {
+    this.loadUserProfile();
+  }
+
+  loadUserProfile() {
+    if (this.authService.isLoggedIn()) {
+      this.authService.getUserProfile().subscribe({
+        next: (profile) => {
+          this.userProfile = profile;
+          console.log('User profile loaded:', profile);
+        },
+        error: (error) => {
+          console.error('Error loading profile:', error);
+          this.router.navigate(['/login']);
+        }
+      });
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
+  
 
   toggleDropdown() {
     this.isDropdownOpen = !this.isDropdownOpen;
@@ -23,18 +46,15 @@ export class NavbarComponent {
   logout() {
     this.authService.logout().subscribe({
       next: () => {
-        // นำทางไปยังหน้า login
         this.router.navigate(['/login']);
       },
       error: () => {
-        // กรณีเกิดข้อผิดพลาด ก็ให้นำทางไปหน้า login
         this.router.navigate(['/login']);
       }
     });
-  
-    // ปิด dropdown
     this.isDropdownOpen = false;
   }
+  
 
   onClickOutside() {
     this.isDropdownOpen = false;

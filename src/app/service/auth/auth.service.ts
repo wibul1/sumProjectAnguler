@@ -1,25 +1,35 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable ,of } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8090/api/auth';
+  private apiUrl = 'http://localhost:8090/api';
 
   constructor(private http: HttpClient) {}
 
   // ฟังก์ชันสำหรับสมัครสมาชิก
   register(user: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/register`, user);
+    return this.http.post(`${this.apiUrl}/auth/register`, user);
   }
 
   // ฟังก์ชันสำหรับเข้าสู่ระบบ
-  login(credentials: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+  login(username: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/auth/login`, { username, password }).pipe(
+      tap(response => {
+        localStorage.setItem('token', response.token);  // เก็บโทเค็นใน localStorage
+      }),
+      catchError(error => {
+        console.error('Login Error:', error);
+        return throwError(error);  // ใช้ throwError จาก rxjs
+      })
+    );
   }
+  
+  
 
   // ฟังก์ชันสำหรับจัดเก็บ token หลังจาก login สำเร็จ
   saveToken(token: string): void {
@@ -36,29 +46,35 @@ export class AuthService {
     return !!this.getToken();  // ถ้ามี token จะ return true
   }
 
-  // ฟังก์ชันสำหรับ logout (ลบ token)
   logout(): Observable<any> {
-    const token = this.getToken();
-    return this.http.post(`${this.apiUrl}/logout`, {}, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    }).pipe(
-      tap(() => {
-        // ลบ token ออกจาก localStorage เมื่อ logout สำเร็จ
-        this.removeToken();
-      }),
+    const token = localStorage.getItem('token');
+    // ลบ token ก่อนทำ request
+    localStorage.removeItem('token');
+    
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    return this.http.post<any>(`${this.apiUrl}/auth/logout`, {}, { headers }).pipe(
       catchError((error) => {
-        // หากเกิด error ก็ให้ลบ token ออก
-        this.removeToken();
-        return of(null);
+        console.error('Logout Error:', error);
+        return throwError(error);
       })
     );
   }
+  
 
   // เพิ่ม method นี้เพื่อลบ token
   removeToken(): void {
     localStorage.removeItem('token');
+  }
+
+  getUserProfile(): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.getToken()}`, // ส่ง JWT Token ที่เก็บไว้
+    });
+  
+    return this.http.get(`${this.apiUrl}/user/profile`, { headers });
   }
   
 }

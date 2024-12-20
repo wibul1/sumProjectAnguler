@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth/auth.service';
 
 
@@ -9,19 +10,42 @@ import { AuthService } from 'src/app/service/auth/auth.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  form: any = {};  // สร้างตัวแปร form
-  isSignUpFailed = false;  // ตัวแปรสำหรับตรวจสอบการสมัครล้มเหลว
-  errorMessage = '';  // ตัวแปรเก็บข้อความผิดพลาด
+  form: any = {};
+  confirmPassword: string = '';
+  currentStep: number = 1;
+  isSignUpFailed = false;
+  errorMessage = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService, 
+  ) {}
 
-  // ฟังก์ชัน onSubmit() ที่จะถูกเรียกเมื่อฟอร์มถูก submit
+  proceedToNextStep() {
+    if (this.form.email && this.form.firstName && this.form.lastName) {
+      this.currentStep = 2;
+    } else {
+      alert('Please fill in all personal information');
+    }
+  }
+
+  backToPreviousStep() {
+    this.currentStep = 1;
+  }
+
   onSubmit() {
+    // Validate password match
+    if (this.form.password !== this.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
     this.authService.register(this.form).subscribe(
       (data: any) => {
-        console.log('Register successful!', data);
+        // console.log('Register successful!', data);
         this.isSignUpFailed = false;
         alert('Registration successful!');
+        this.router.navigate(['/login']);
       },
       (err: any) => {
         this.errorMessage = err.error.message;

@@ -21,7 +21,8 @@ export class LoginComponent {
 
   // ฟังก์ชัน onSubmit สำหรับเข้าสู่ระบบ
   onSubmit() {
-    this.authService.login(this.form).subscribe({
+    const { username, password } = this.form;  // สมมติว่า form เก็บค่า username และ password
+    this.authService.login(username, password).subscribe({
       next: (data) => {
         // console.log('Login successful!', data);
         this.authService.saveToken(data.token);  // เก็บ token ใน localStorage
@@ -35,5 +36,6 @@ export class LoginComponent {
       }
     });
   }
+  
   
 }
